@@ -2,15 +2,19 @@
 
 [![Build Status](https://travis-ci.com/Guy-Incognito/rss-hot-topic-analysis.svg?branch=master)](https://travis-ci.com/Guy-Incognito/rss-hot-topic-analysis)
 
-
 ## Docker
+
+Image is pushed to dockerhub automatically.
+
+### Run
+Run prebuild image with docker:
+```
+docker run --rm -p 8080:8080 georgmoser/rss-hot-topic-analysis 
+```
+
 ### Build
 ```
 docker build . -t rss-hot-topic-analysis   
-```
-### Run
-```
-docker run --rm -p 8080:8080 rss-hot-topic-analysis   
 ```
 
 ##OpenApi Doc:
