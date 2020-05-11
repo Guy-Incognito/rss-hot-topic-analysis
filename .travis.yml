@@ -1,0 +1,7 @@
+sudo: false
+language: java
+jdk:
+  - openjdk11
+deploy:
+  provider: script
+  script: mvn install -Dmaven.javadoc.skip=true -B -V

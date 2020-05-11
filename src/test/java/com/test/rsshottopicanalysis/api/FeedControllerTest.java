@@ -1,7 +1,9 @@
 package com.test.rsshottopicanalysis.api;
 
 
+import com.test.rsshottopicanalysis.report.AnalysisReportRepository;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -25,6 +27,14 @@ class FeedControllerTest {
 
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private AnalysisReportRepository analysisReportRepository;
+
+    @BeforeEach
+    public void cleanUp() {
+        analysisReportRepository.deleteAll();
+    }
 
     @Test
     void analyseFeeds() throws MalformedURLException, URISyntaxException {
