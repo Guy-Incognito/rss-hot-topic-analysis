@@ -7,7 +7,7 @@
 Image is pushed to dockerhub automatically.
 
 ### Run
-Run prebuild image with docker:
+Run prebuilt image with docker:
 ```
 docker run --rm -p 8080:8080 georgmoser/rss-hot-topic-analysis 
 ```
@@ -17,7 +17,7 @@ docker run --rm -p 8080:8080 georgmoser/rss-hot-topic-analysis
 docker build . -t rss-hot-topic-analysis   
 ```
 
-##OpenApi Doc:
+## OpenApi Doc:
 ```
 http://localhost:8080/swagger-ui/index.html?configUrl=/v3/api-docs/swagger-config
 ```
