@@ -17,7 +17,7 @@ public class Feed {
     private Long relevance;
     private String uri;
     private String title;
-    @Column(length = 511)
+    @Column(length = 1023)
     private String link;
 
     public Feed() {
