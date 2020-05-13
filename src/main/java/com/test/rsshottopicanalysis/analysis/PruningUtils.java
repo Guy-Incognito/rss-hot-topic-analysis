@@ -19,10 +19,14 @@ import java.util.regex.Pattern;
 /**
  * Util class for removing irrelevant information from strings.
  */
-public class PruningUtils {
+public final class PruningUtils {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(PruningUtils.class);
     private static final List<String> SEPARATORS = List.of(" - ", " | ");
+
+    private PruningUtils() {
+
+    }
 
     /**
      * Removes common news channel suffixes.
