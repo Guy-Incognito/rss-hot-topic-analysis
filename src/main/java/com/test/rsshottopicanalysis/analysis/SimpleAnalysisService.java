@@ -1,5 +1,6 @@
 package com.test.rsshottopicanalysis.analysis;
 
+import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.similarity.CosineDistance;
 import org.springframework.stereotype.Service;
 
@@ -56,8 +57,11 @@ public class SimpleAnalysisService {
     }
 
     private static String prepare(String string) {
+        if (StringUtils.isEmpty(string)) {
+            return "";
+        }
         String prune = PruningUtils.removeChannelSuffix(string);
-        return PruningUtils.removeStopWords(prune);
+        return PruningUtils.removeStopWords(prune).toLowerCase();
     }
 
     private static class RelevanceResult {

@@ -7,8 +7,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.core.io.Resource;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.util.List;
 
 @SpringBootTest
 class AnalysisServiceTest {
@@ -19,19 +17,22 @@ class AnalysisServiceTest {
     @Value("classpath:testfeed")
     private Resource testfeed;
 
-    @Test
-    void analyseFeeds() throws MalformedURLException {
-
-//        URL url1 = new URL("https://news.google.com/rss?cf=all&hl=en-US&pz=1&gl=US&ceid=US:en");
-//
-//        analysisService.analyseFeeds(List.of(url1));
-    }
+    @Value("classpath:feed-no-description.xml")
+    private Resource feedWithEmptyDescription;
 
     @Test
-    void analyseFeedsFromFile() throws IOException {
+    void analyseFeedsFromFile_3candidatesDetected() throws IOException {
 
         var analysisCandidates = analysisService.analyseFeedsFromFile(testfeed.getFile());
 
         assert analysisCandidates.size() == 3;
+    }
+
+    @Test
+    void analyseFeedsFromFile_noDescription() throws IOException {
+
+        var analysisCandidates = analysisService.analyseFeedsFromFile(feedWithEmptyDescription.getFile());
+
+        assert analysisCandidates.size() == 1;
     }
 }

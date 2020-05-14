@@ -1,5 +1,6 @@
 package com.test.rsshottopicanalysis.analysis;
 
+import com.rometools.rome.feed.synd.SyndContent;
 import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
@@ -108,7 +109,11 @@ public class AnalysisService {
                                 syndEntry.getUri(),
                                 syndEntry.getLink(),
                                 syndEntry.getTitle(),
-                                syndEntry.getDescription().getValue())))
+                                Optional.ofNullable(syndEntry.getDescription())
+                                        .map(SyndContent::getValue)
+                                        .orElse(null))
+                        )
+                )
                 .flatMap(Stream::distinct)
                 .collect(Collectors.toList());
 

@@ -1,0 +1,25 @@
+<rss version="2.0">
+    <channel>
+        <generator>NFE/5.0</generator>
+        <title>Top stories - Google News</title>
+        <link>
+            https://news.google.com/?cf=all&hl=en-US&pz=1&gl=US&ceid=US:en
+        </link>
+        <language>en-US</language>
+        <webMaster>news-webmaster@google.com</webMaster>
+        <copyright>2020 Google Inc.</copyright>
+        <lastBuildDate>Fri, 08 May 2020 10:15:16 GMT</lastBuildDate>
+        <description>Google News</description>
+        <item>
+            <title>
+                Justice Dept. Drops Case Against Michael Flynn - The New York Times
+            </title>
+            <link>
+                https://news.google.com/__i/rss/rd/articles/CBMiTmh0dHBzOi8vd3d3Lm55dGltZXMuY29tLzIwMjAvMDUvMDcvdXMvcG9saXRpY3MvbWljaGFlbC1mbHlubi1jYXNlLWRyb3BwZWQuaHRtbNIBUmh0dHBzOi8vd3d3Lm55dGltZXMuY29tLzIwMjAvMDUvMDcvdXMvcG9saXRpY3MvbWljaGFlbC1mbHlubi1jYXNlLWRyb3BwZWQuYW1wLmh0bWw?oc=5
+            </link>
+            <guid isPermaLink="false">52780768058116</guid>
+            <pubDate>Fri, 08 May 2020 03:37:11 GMT</pubDate>
+            <source url="https://www.nytimes.com">The New York Times</source>
+        </item>
+    </channel>
+</rss>
