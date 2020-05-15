@@ -1,6 +1,7 @@
-package com.test.rsshottopicanalysis.analysis;
+package com.test.rsshottopicanalysis.analysis.simple;
 
-import org.apache.commons.lang3.StringUtils;
+import com.test.rsshottopicanalysis.analysis.AnalysedFeed;
+import com.test.rsshottopicanalysis.analysis.AnalysisCandidate;
 import org.apache.commons.text.similarity.CosineDistance;
 import org.springframework.stereotype.Service;
 
@@ -8,6 +9,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
+
+import static com.test.rsshottopicanalysis.analysis.PruningUtils.prepare;
 
 /**
  * Simple News Analysis service.
@@ -56,13 +59,6 @@ public class SimpleAnalysisService {
                 .collect(Collectors.toList());
     }
 
-    private static String prepare(String string) {
-        if (StringUtils.isEmpty(string)) {
-            return "";
-        }
-        String prune = PruningUtils.removeChannelSuffix(string);
-        return PruningUtils.removeStopWords(prune).toLowerCase();
-    }
 
     private static class RelevanceResult {
         private final AnalysisCandidate candidate;

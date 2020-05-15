@@ -25,7 +25,8 @@ class AnalysisServiceTest {
 
         var analysisCandidates = analysisService.analyseFeedsFromFile(testfeed.getFile());
 
-        assert analysisCandidates.size() == 3;
+        assert analysisCandidates.getHotTopics().size() == 3;
+        assert analysisCandidates.getHotFeeds().size() == 3;
     }
 
     @Test
@@ -33,6 +34,7 @@ class AnalysisServiceTest {
 
         var analysisCandidates = analysisService.analyseFeedsFromFile(feedWithEmptyDescription.getFile());
 
-        assert analysisCandidates.size() == 1;
+        assert analysisCandidates.getHotTopics().size() == 3;
+        assert analysisCandidates.getHotFeeds().size() == 1;
     }
 }

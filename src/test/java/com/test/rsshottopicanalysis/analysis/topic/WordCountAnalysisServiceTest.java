@@ -1,5 +1,6 @@
-package com.test.rsshottopicanalysis.analysis;
+package com.test.rsshottopicanalysis.analysis.topic;
 
+import com.test.rsshottopicanalysis.analysis.AnalysisCandidate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -10,19 +11,20 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
 @SpringBootTest
-class SimpleAnalysisServiceTest {
+class WordCountAnalysisServiceTest {
+
 
     @Autowired
-    private SimpleAnalysisService simpleAnalysisService;
+    private WordCountAnalysisService wordCountAnalysisService;
 
     @Test
-    public void testAnalysis_candidatesRankedCorrectly() {
+    void findHotTopics() {
         AnalysisCandidate coronavirus_trump_cats_dogs =
                 new AnalysisCandidate("1", "", "Coronavirus Trump Cats Dogs", "");
         AnalysisCandidate cats = new AnalysisCandidate("2", "", "Cats", "");
         AnalysisCandidate dogs = new AnalysisCandidate("3", "", "Dogs", "");
-        AnalysisCandidate turtles = new AnalysisCandidate("4", "", "Turtles", "");
-        AnalysisCandidate trump = new AnalysisCandidate("5", "", "trump", "");
+        AnalysisCandidate turtles = new AnalysisCandidate("4", "", "Turtles love trump", "");
+        AnalysisCandidate trump = new AnalysisCandidate("5", "", "trump eats banana", "");
 
         List<AnalysisCandidate> candidateList = List.of(
                 coronavirus_trump_cats_dogs,
@@ -32,22 +34,13 @@ class SimpleAnalysisServiceTest {
                 trump
         );
 
-        List<AnalysedFeed> hotTopics = simpleAnalysisService.findHotTopics(candidateList);
+        List<AnalysedTopic> hotTopics = wordCountAnalysisService.findHotTopics(candidateList);
 
         assertFalse(hotTopics.isEmpty());
         assertEquals(3, hotTopics.size());
 
-        // First result
-        assertEquals(coronavirus_trump_cats_dogs.getId(), hotTopics.get(0).getId());
-        // relevance must be 3, since 3 similar titles are present (i.e. cats,dogs and trump)
-        assertEquals(3L, hotTopics.get(0).getRelevance());
-
-        // Second result must have relevance 1
-        assertEquals(1L, hotTopics.get(1).getRelevance());
-
-        // Third result must have relevance 1
-        assertEquals(1L, hotTopics.get(2).getRelevance());
-
+        // first topic must be trump since it occurs in 3 candidates.
+        assertEquals("trump", hotTopics.get(0).getTopic());
+        assertEquals(3, hotTopics.get(0).getFrequency());
     }
-
 }

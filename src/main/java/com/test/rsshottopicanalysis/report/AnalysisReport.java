@@ -11,11 +11,11 @@ import java.util.List;
 public class AnalysisReport {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.TABLE)
     private Long id;
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    private List<Feed> feeds;
+    private List<Topic> topics;
 
     private LocalDateTime createdAt;
 
@@ -27,12 +27,12 @@ public class AnalysisReport {
         this.id = id;
     }
 
-    public List<Feed> getFeeds() {
-        return feeds;
+    public List<Topic> getTopics() {
+        return topics;
     }
 
-    public void setFeeds(List<Feed> feeds) {
-        this.feeds = feeds;
+    public void setTopics(List<Topic> topics) {
+        this.topics = topics;
     }
 
     public LocalDateTime getCreatedAt() {
