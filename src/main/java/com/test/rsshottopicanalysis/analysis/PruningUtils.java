@@ -1,5 +1,6 @@
 package com.test.rsshottopicanalysis.analysis;
 
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -26,6 +27,22 @@ public final class PruningUtils {
 
     private PruningUtils() {
 
+    }
+
+    /**
+     * Prepares string for analysing.
+     *
+     * @param string string to normalize.
+     * @return string prepared for analysing.
+     */
+    public static String prepare(String string) {
+        if (StringUtils.isEmpty(string)) {
+            return "";
+        }
+        string = string.toLowerCase();
+        String prune = PruningUtils.removeChannelSuffix(string);
+        String withoutStopWords = PruningUtils.removeStopWords(prune);
+        return removeNonAlphaNumericalChars(withoutStopWords);
     }
 
     /**
@@ -66,5 +83,9 @@ public final class PruningUtils {
     private static Pattern compileStopWordsRegex(List<String> stopWords) {
         String pipedStopWords = String.join("|", stopWords);
         return Pattern.compile("\\b(?:" + pipedStopWords + ")\\b\\s*", Pattern.CASE_INSENSITIVE);
+    }
+
+    private static String removeNonAlphaNumericalChars(String string) {
+        return string.replaceAll("[^\\p{Alnum}\\s]", "");
     }
 }

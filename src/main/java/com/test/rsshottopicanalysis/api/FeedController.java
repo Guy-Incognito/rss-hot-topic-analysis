@@ -48,10 +48,17 @@ public class FeedController {
     }
 
     private AnalysisResultResponse map(AnalysisReport analysisReport) {
-        List<AnalysisResultResponseEntry> entries = analysisReport.getFeeds().stream()
-                .map(feed -> new AnalysisResultResponseEntry(feed.getUri(), feed.getTitle(), feed.getLink(), feed.getRelevance()))
-                .collect(Collectors.toList());
-        return new AnalysisResultResponse(analysisReport.getId(), analysisReport.getCreatedAt(), entries);
+        List<TopicEntry> topics = analysisReport.getTopics().stream()
+                .map(topic -> new TopicEntry(
+                        topic.getName(),
+                        topic.getFrequency(),
+                        topic.getFeeds().stream()
+                                .map(feed -> new FeedEntry(feed.getTitle(), feed.getLink()))
+                                .collect(Collectors.toList()))
+                ).collect(Collectors.toList());
+
+        return new AnalysisResultResponse(analysisReport.getId(), analysisReport.getCreatedAt(), topics);
+
     }
 
 

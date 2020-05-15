@@ -4,6 +4,7 @@ package com.test.rsshottopicanalysis.api;
 import com.test.rsshottopicanalysis.report.AnalysisReport;
 import com.test.rsshottopicanalysis.report.AnalysisReportRepository;
 import com.test.rsshottopicanalysis.report.Feed;
+import com.test.rsshottopicanalysis.report.Topic;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,9 +62,11 @@ class FeedControllerTest {
         feed.setTitle("title");
         feed.setLink("link");
 
+        Topic topic = new Topic("test", 5L, List.of(feed));
+
         AnalysisReport analysisReport = new AnalysisReport();
         analysisReport.setCreatedAt(LocalDateTime.now());
-        analysisReport.setFeeds(List.of(feed));
+        analysisReport.setTopics(List.of(topic));
         analysisReportRepository.save(analysisReport);
 
         Long id = analysisReport.getId();
@@ -74,7 +77,7 @@ class FeedControllerTest {
         AnalysisResultResponse body = response.getBody();
         Assertions.assertNotNull(body);
         Assertions.assertEquals(id, body.getId());
-        Assertions.assertEquals(feed.getUri(), body.getEntries().get(0).getUri());
+        Assertions.assertEquals(feed.getLink(), body.getTopics().get(0).getFeeds().get(0).getLink());
 
     }
 }

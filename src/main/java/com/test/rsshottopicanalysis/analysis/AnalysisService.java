@@ -5,9 +5,13 @@ import com.rometools.rome.feed.synd.SyndFeed;
 import com.rometools.rome.io.FeedException;
 import com.rometools.rome.io.SyndFeedInput;
 import com.rometools.rome.io.XmlReader;
+import com.test.rsshottopicanalysis.analysis.simple.SimpleAnalysisService;
+import com.test.rsshottopicanalysis.analysis.topic.AnalysedTopic;
+import com.test.rsshottopicanalysis.analysis.topic.WordCountAnalysisService;
 import com.test.rsshottopicanalysis.report.AnalysisReport;
 import com.test.rsshottopicanalysis.report.AnalysisReportRepository;
 import com.test.rsshottopicanalysis.report.Feed;
+import com.test.rsshottopicanalysis.report.Topic;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
@@ -31,11 +35,14 @@ public class AnalysisService {
     private static final Logger LOGGER = LoggerFactory.getLogger(AnalysisService.class);
     private final SimpleAnalysisService simpleAnalysisService;
     private final AnalysisReportRepository analysisReportRepository;
+    private final WordCountAnalysisService wordCountAnalysisService;
 
     public AnalysisService(SimpleAnalysisService simpleAnalysisService,
-                           AnalysisReportRepository analysisReportRepository) {
+                           AnalysisReportRepository analysisReportRepository,
+                           WordCountAnalysisService wordCountAnalysisService) {
         this.simpleAnalysisService = simpleAnalysisService;
         this.analysisReportRepository = analysisReportRepository;
+        this.wordCountAnalysisService = wordCountAnalysisService;
     }
 
     /**
@@ -56,18 +63,25 @@ public class AnalysisService {
      */
     public Long analyseFeedsFromUrls(List<URL> rssUrls) {
 
-        List<AnalysedFeed> analysedFeeds = analyseFromUrls(rssUrls);
+        AnalysisResult analysisResult = analyseFromUrls(rssUrls);
 
         AnalysisReport analysisReport = new AnalysisReport();
-        List<Feed> feeds = analysedFeeds.stream()
-                .map(analysedFeed -> new Feed(
-                        analysedFeed.getRelevance(),
-                        analysedFeed.getId(),
-                        analysedFeed.getTitle(),
-                        analysedFeed.getLink())
+        List<Topic> topics = analysisResult.getHotTopics().stream()
+                .map(analysedTopic -> new Topic(
+                                analysedTopic.getTopic(),
+                                analysedTopic.getFrequency(),
+                                analysedTopic.getEntries().stream()
+                                        .map(analysisCandidate -> new Feed(null,
+                                                        analysisCandidate.getId(),
+                                                        analysisCandidate.getTitle(),
+                                                        analysisCandidate.getLink()
+                                                )
+                                        ).collect(Collectors.toList())
+                        )
                 )
                 .collect(Collectors.toList());
-        analysisReport.setFeeds(feeds);
+
+        analysisReport.setTopics(topics);
         analysisReport.setCreatedAt(LocalDateTime.now());
         analysisReportRepository.save(analysisReport);
         return analysisReport.getId();
@@ -77,9 +91,9 @@ public class AnalysisService {
      * Analyses list of rss feeds.
      *
      * @param rssUrls list of rss feeds to analyse.
-     * @return list of analysed feeds.
+     * @return list of analysis results.
      */
-    public List<AnalysedFeed> analyseFromUrls(List<URL> rssUrls) {
+    public AnalysisResult analyseFromUrls(List<URL> rssUrls) {
 
         List<SyndFeed> feeds = rssUrls.stream()
                 .map(AnalysisService::parseFeedFromUrl)
@@ -94,15 +108,15 @@ public class AnalysisService {
      * Analyses list of rss feeds.
      *
      * @param file rss feed as file.
-     * @return list of analysed feeds.
+     * @return analysis result.
      */
-    public List<AnalysedFeed> analyseFeedsFromFile(File file) {
+    public AnalysisResult analyseFeedsFromFile(File file) {
         return parseFeedFromFile(file)
                 .map(syndFeed -> analyse(List.of(syndFeed)))
-                .orElse(Collections.emptyList());
+                .orElse(new AnalysisResult(Collections.emptyList(), Collections.emptyList()));
     }
 
-    private List<AnalysedFeed> analyse(List<SyndFeed> feeds) {
+    private AnalysisResult analyse(List<SyndFeed> feeds) {
         List<AnalysisCandidate> candidates = feeds.stream()
                 .map(syndFeed -> syndFeed.getEntries().stream()
                         .map(syndEntry -> new AnalysisCandidate(
@@ -117,7 +131,11 @@ public class AnalysisService {
                 .flatMap(Stream::distinct)
                 .collect(Collectors.toList());
 
-        return simpleAnalysisService.findHotTopics(candidates);
+        List<AnalysedTopic> hotTopics = wordCountAnalysisService.findHotTopics(candidates);
+
+        List<AnalysedFeed> hotFeeds = simpleAnalysisService.findHotTopics(candidates);
+
+        return new AnalysisResult(hotTopics, hotFeeds);
     }
 
     private static Optional<SyndFeed> parseFeedFromFile(File file) {

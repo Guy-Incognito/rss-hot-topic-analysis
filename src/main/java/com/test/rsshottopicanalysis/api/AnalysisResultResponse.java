@@ -10,24 +10,23 @@ public class AnalysisResultResponse {
 
     private final Long id;
     private final LocalDateTime createdAt;
-    private final List<AnalysisResultResponseEntry> entries;
+    private final List<TopicEntry> topics;
 
-
-    public AnalysisResultResponse(Long id, LocalDateTime createdAt, List<AnalysisResultResponseEntry> entries) {
+    public AnalysisResultResponse(Long id, LocalDateTime createdAt, List<TopicEntry> topics) {
         this.id = id;
         this.createdAt = createdAt;
-        this.entries = entries;
+        this.topics = topics;
     }
 
     public Long getId() {
         return id;
     }
 
-    public List<AnalysisResultResponseEntry> getEntries() {
-        return entries;
-    }
-
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public List<TopicEntry> getTopics() {
+        return topics;
     }
 }
